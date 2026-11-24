@@ -1,0 +1,316 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌾 AgriSense – AI Crop Yield Prediction </title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+  <!-- Ambient Animated Background -->
+  <div class="bg-animated"></div>
+
+  <!-- Sticky Glassmorphic Header -->
+  <header>
+    <div class="logo">🌿 AgriSense</div>
+    <nav>
+      <a href="#home" class="nav-link active">Home</a>
+      <a href="#about" class="nav-link">About</a>
+      <a href="#predict" class="nav-link">Predict</a>
+      <a href="#insights" class="nav-link">Insights</a>
+      <a href="#history" class="nav-link">History</a>
+      <a href="/admin/" target="_blank" class="nav-btn-admin">⚙️ Admin</a>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero" id="home">
+    <div class="hero-content">
+      <span class="badge"></span>
+      <h1>AI-Powered Crop Yield Prediction</h1>
+      <p class="hero-subtitle">Make smarter farming decisions with real-time agro-climatic insights 🌱</p>
+      
+      <div class="cta">
+        <p>Empowering farmers and agronomists through AI-driven analytics and precision forecasting for a sustainable future 🌍.</p>
+        <p class="cta-label">Start Prediction</p>
+        <div class="cta-wrapper">
+          <div class="cta-image-btn" onclick="document.getElementById('predict').scrollIntoView({ behavior: 'smooth' })">
+            <svg class="cta-main-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="32" cy="32" r="30" fill="rgba(255,255,255,0.2)"/>
+              <path d="M32 12C20.95 12 12 20.95 12 32C12 43.05 20.95 52 32 52C43.05 52 52 43.05 52 32C52 20.95 43.05 12 32 12ZM32 48C23.16 48 16 40.84 16 32C16 23.16 23.16 16 32 16C40.84 16 48 23.16 48 32C48 40.84 40.84 48 32 48Z" fill="#ffffff"/>
+              <path d="M32 20V32L40.5 37" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+              <path d="M26 40C28.5 42 35.5 42 38 40" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M28 26C28 24 36 24 36 26" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="about" id="about">
+    <div class="section-container">
+      <h3>About AgriSense</h3>
+      <div class="about-card">
+        <p>
+          AgriSense integrates <strong>Artificial Intelligence</strong>, <strong>Real-Time Weather Data</strong>, and <strong>Soil Analysis</strong>
+          to help predict crop yield with precision. 🌾
+        </p>
+        <p>
+          The system leverages regional climate patterns, soil pH balance, organic carbon levels, and irrigation dynamics to compute high-accuracy yield forecasts. Our goal is to empower farmers with sustainable, data-backed decisions that increase crop productivity while conserving water and land resources 🌍.
+        </p>
+        <div class="features-pill-row">
+          <span class="feature-pill">🛰️ GPS Geolocation</span>
+          <span class="feature-pill">🌦️ Live Weather Heuristics</span>
+          <span class="feature-pill">🧪 Soil pH & NPK Analysis</span>
+          <span class="feature-pill">💾 Django SQLite History</span>
+          <span class="feature-pill">⚡ Instant AI Inference</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Prediction Dashboard Section -->
+  <section class="prediction" id="predict">
+    <div class="section-container">
+      <h2>🌾 Crop Yield Prediction Dashboard</h2>
+      
+      <div class="prediction-grid">
+        <!-- Form Column -->
+        <div class="card form-card">
+          <h3>Enter Crop Details</h3>
+          
+          <!-- Quick Preset Coordinates -->
+          <div class="presets-row">
+            <span class="preset-label">Quick Presets:</span>
+            <button type="button" class="preset-btn" onclick="setPreset(28.6139, 77.2090, 'Wheat')">Delhi (Wheat)</button>
+            <button type="button" class="preset-btn" onclick="setPreset(31.1471, 75.3412, 'Rice')">Punjab (Rice)</button>
+            <button type="button" class="preset-btn" onclick="setPreset(41.8781, -87.6298, 'Maize')">Midwest (Maize)</button>
+            <button type="button" class="preset-btn" onclick="setPreset(-15.7801, -47.9292, 'Soybean')">Brazil (Soybean)</button>
+          </div>
+
+          <form id="predictForm">
+            {% csrf_token %}
+            <div class="form-row">
+              <div class="form-group">
+                <label for="lat">Latitude</label>
+                <input type="number" step="any" id="lat" name="latitude" placeholder="e.g. 28.6139" required value="28.6139">
+              </div>
+              <div class="form-group">
+                <label for="lon">Longitude</label>
+                <input type="number" step="any" id="lon" name="longitude" placeholder="e.g. 77.2090" required value="77.2090">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="crop">Crop Type</label>
+              <select id="crop" name="crop_type" required>
+                <option value="">Select crop</option>
+                <option value="Wheat" selected>Wheat</option>
+                <option value="Rice">Rice</option>
+                <option value="Maize">Maize</option>
+                <option value="Soybean">Soybean</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="date">Planting Date</label>
+              <input type="date" id="date" name="planting_date" required>
+            </div>
+
+            <div class="checkbox-row">
+              <label class="checkbox-container">
+                <input type="checkbox" id="irrigation" name="irrigation" checked>
+                <span class="checkmark"></span>
+                <span class="checkbox-label">Irrigation Used</span>
+              </label>
+            </div>
+
+            <button type="submit" class="predict-btn" id="predictBtn">
+              <span class="btn-text">Predict Yield 🌱</span>
+              <span class="btn-spinner" style="display: none;">⏳ Computing...</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Result Column -->
+        <div class="card result-card" id="predictionResultCard">
+          <h3>Predicted Yield</h3>
+          <div id="resultPlaceholder" class="result-placeholder">
+            <div class="placeholder-icon">🌱</div>
+            <p>Fill in the crop details and click <strong>"Predict Yield 🌱"</strong> to generate your AI forecast.</p>
+          </div>
+
+          <div id="resultContent" class="result-content" style="display: none;">
+            <div class="yield-badge">
+              <span class="yield-number" id="yieldNumber">--</span>
+              <span class="yield-unit">tons/ha</span>
+            </div>
+            
+            <div class="confidence-box">
+              <div class="confidence-header">
+                <span>Prediction Confidence</span>
+                <strong id="confidenceVal">--%</strong>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" id="confidenceBar" style="width: 0%;"></div>
+              </div>
+            </div>
+
+            <div class="status-notifications">
+              <p class="status-badge soil-badge" id="soilStatus">🌱 Ideal soil detected</p>
+              <p class="status-badge weather-badge" id="weatherStatus">🌾 Weather conditions suggest moderate growth</p>
+            </div>
+
+            <div class="tips-box">
+              <h4>📋 Agronomic Recommendations</h4>
+              <ul id="tipsList"></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Field Insights Section -->
+  <section class="insights" id="insights">
+    <div class="section-container">
+      <h2>🌦️ Field Insights Overview</h2>
+      <p class="section-desc">Fetch live meteorological indicators and soil composition for the entered location.</p>
+      
+      <div class="insights-action">
+        <button id="showInsightsBtn" class="insights-btn">
+          <span>Show Insights</span>
+          <span id="insightsSpinner" style="display: none;"> ⏳ Loading...</span>
+        </button>
+        <span id="insightsMsg" class="insights-msg"></span>
+      </div>
+
+      <div class="insight-grid" id="insightGrid">
+        <!-- Weather Card -->
+        <div class="insight-card weather-card">
+          <div class="card-icon">🌤️</div>
+          <h4>Weather Overview</h4>
+          <div class="metrics">
+            <div class="metric-item">
+              <span class="metric-label">Temperature:</span>
+              <span class="metric-val" id="tempVal">--°C</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Rainfall:</span>
+              <span class="metric-val" id="rainVal">--mm</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Humidity:</span>
+              <span class="metric-val" id="humidityVal">--%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Soil Health Card -->
+        <div class="insight-card soil-card">
+          <div class="card-icon">🌱</div>
+          <h4>Soil Health</h4>
+          <div class="metrics">
+            <div class="metric-item">
+              <span class="metric-label">pH:</span>
+              <span class="metric-val" id="phVal">--</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Organic Carbon:</span>
+              <span class="metric-val" id="carbonVal">--%</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Nitrogen:</span>
+              <span class="metric-val" id="nitrogenVal">-- mg/kg</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Irrigation Insights Card -->
+        <div class="insight-card irrigation-card">
+          <div class="card-icon">💧</div>
+          <h4>Irrigation Insights</h4>
+          <div class="metrics">
+            <div class="metric-item">
+              <span class="metric-label">Status:</span>
+              <span class="metric-val" id="irrigStatusVal">--</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Efficiency:</span>
+              <span class="metric-val" id="irrigEffVal">--%</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Water Index:</span>
+              <span class="metric-val" id="waterIndexVal">--</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Database History Section (Django Feature) -->
+  <section class="history-section" id="history">
+    <div class="section-container">
+      <div class="history-header">
+        <h2>📊 Recent Prediction History (Database)</h2>
+        <button id="refreshHistoryBtn" class="refresh-btn">🔄 Refresh</button>
+      </div>
+      <p class="section-desc">All predictions made by users are permanently stored in your Django SQLite database.</p>
+
+      <div class="table-responsive">
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Crop</th>
+              <th>Coordinates</th>
+              <th>Predicted Yield</th>
+              <th>Confidence</th>
+              <th>Timestamp</th>
+            </tr>
+          </thead>
+          <tbody id="historyTableBody">
+            {% for rec in recent_predictions %}
+            <tr>
+              <td>#{{ rec.id }}</td>
+              <td><strong>{{ rec.crop_type }}</strong></td>
+              <td>{{ rec.latitude|floatformat:2 }}, {{ rec.longitude|floatformat:2 }}</td>
+              <td><span class="yield-tag">{{ rec.predicted_yield }} t/ha</span></td>
+              <td>{{ rec.confidence }}%</td>
+              <td>{{ rec.created_at|date:"M d, Y H:i" }}</td>
+            </tr>
+            {% empty %}
+            <tr id="emptyHistoryRow">
+              <td colspan="6" class="text-center">No predictions saved yet. Submit a prediction above!</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <p>🌿 Crafted with care by <strong>AgriSense AI</strong></p>
+      <p class="footer-sub">
+        Built with <strong>Django 5 & Python</strong> • Powered by ☁️ <strong>OpenWeather</strong> • 🧠 <strong>Smart AI</strong> • 🌎 <strong>Sustainable Tech</strong>
+      </p>
+      <p class="footer-links">
+        <a href="/admin/">Django Admin Panel</a> • 
+        <a href="#home">Back to Top ↑</a>
+      </p>
+    </div>
+  </footer>
+
+  <script src="{% static 'js/app.js' %}"></script>
+</body>
+</html>
